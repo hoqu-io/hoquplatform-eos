@@ -27,7 +27,7 @@ clean:
 	cleos create account eosio hoquplatform EOS8Bqx38Uqa3oorZsxuDK2V8Dtodos5x5fEuQgqh7CKDawdRzMgf
 	cleos create account eosio hoqutoken EOS6Vbm9emcdUheFJmPutmtPimLGBeeSgR26FzY6o6JAq1ke6CDoz
 
-test: create_accounts test_users test_networks test_offers test_offer_tariffs test_ads test_leads
+test: create_accounts test_users
 
 create_accounts:
 	-cleos wallet unlock --password PW5KQMbwwySCRtp182CUXd5gpAAvz8qcUo6n3SPth2FsardLA46gi
@@ -35,18 +35,14 @@ create_accounts:
 	-cleos create account eosio merchtestacc EOS88jtvMKNZsoMS5fAXA85HuooTmcthXHnRqFqfNK6mBSkonqxLS
 	-cleos create account eosio afftestacc EOS8HPz1jXupskCpgf8GiRvxzhxWwdjxv6sdTbcft6E3oBPkew7RU
 	-cleos push action hoqutoken issue '["merchtestacc", "10000.000000000 HQX", "money for test"]' -p hoqutoken@active
-	#-cleos push action hoqutoken issue '["hoquplatform", "1.000000000 HQX", "money for test"]' -p hoqutoken@active
-	#-cleos push action hoqutoken issue '["afftestacc", "1.000000000 HQX", "money for test"]' -p hoqutoken@active
-	#-cleos push action hoqutoken issue '["nettestacc", "1.000000000 HQX", "money for test"]' -p hoqutoken@active
 	cleos push action hoqutoken approve '["merchtestacc", "hoquplatform", "10000.000000000 HQX"]' -p merchtestacc@active
 
 test_users:
 	cleos push action hoquplatform useradd '["nettestacc", "network"]' -p hoquplatform@active
 	cleos push action hoquplatform useradd '["merchtestacc", "merchant"]' -p hoquplatform@active
 	cleos push action hoquplatform useradd '["afftestacc", "affiliate"]' -p hoquplatform@active
-	cleos get table --show-payer hoquplatform hoquplatform users
-	cleos push action hoquplatform userkycadd '["afftestacc", "{\"report\":\"data\"}", 2]' -p hoquplatform@active
-	cleos get table --show-payer hoquplatform hoquplatform users
+
+	cleos push action hoquplatform userlogin '["afftestacc", 0x41D3FFD5D8800000]' -p afftestacc@active
 
 test_networks:
 	cleos push action hoquplatform networkadd '[55067438, "nettestacc", "HOQU Net"]' -p hoquplatform@active

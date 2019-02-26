@@ -14,6 +14,7 @@ ACTION HOQUPlatform::adadd(uint64_t id, uint64_t offer_id, name affiliate) {
         if ( itr == users_table.end() ) {
             eosio_assert(false, "User doesn`t exist");
         } else {
+            eosio_assert(itr->status == user_statuses["active"], "User must be active");
             eosio_assert(itr->role == user_roles["affiliate"], "User must be role affiliate");
             auto offer = offers_table.find(offer_id);
             eosio_assert(offer != offers_table.end(), "Offer does`t exist");

@@ -1,10 +1,15 @@
 #ifndef HOQUPLATFORM_USERS_ACTION
 #define HOQUPLATFORM_USERS_ACTION
 
-ACTION HOQUPlatform::useradd( name account, string role) {
-    require_auth(_code);
+ACTION HOQUPlatform::userlogin(name account, uint64_t token) {
+    require_auth(account);
+}
 
-    print_f("trx_id: %", checksum256_to_string(get_trx_id()));
+ACTION HOQUPlatform::useradd( name account, string role) {
+    if (!has_auth(account)) {
+        require_auth(_code);
+    }
+
     eosio_assert(is_account(account), "Unknown account");
 
     eosio_assert(user_roles.find(role) != user_roles.end(), "Unknown role");
@@ -21,7 +26,68 @@ ACTION HOQUPlatform::useradd( name account, string role) {
     }
 }
 
-ACTION HOQUPlatform::userkycadd( name account, string report, uint8_t level) {
+ACTION HOQUPlatform::userrating( name account, uint8_t rating) {
+    require_auth(_code);
+
+    eosio_assert(is_account(account), "Unknown account");
+
+    auto itr = users_table.find(account.value);
+
+    if ( itr != users_table.end() ) {
+        users_table.emplace( _self, [&]( auto& u ) {
+            u.rating = rating;
+        });
+    } else {
+        eosio_assert(false, "User doesn`t exist");
+    }
+}
+
+ACTION HOQUPlatform::useractivate( name account ) {
+    require_auth(_code);
+
+    eosio_assert(is_account(account), "Unknown account");
+    auto itr = users_table.find(account.value);
+
+    if ( itr != users_table.end() ) {
+        users_table.emplace( _self, [&]( auto& u ) {
+            u.status = user_statuses["active"];
+        });
+    } else {
+        eosio_assert(false, "User doesn`t exist");
+    }
+}
+
+ACTION HOQUPlatform::userblock( name account ) {
+    require_auth(_code);
+
+    eosio_assert(is_account(account), "Unknown account");
+    auto itr = users_table.find(account.value);
+
+    if ( itr != users_table.end() ) {
+        users_table.emplace( _self, [&]( auto& u ) {
+            u.status = user_statuses["blocked"];
+        });
+    } else {
+        eosio_assert(false, "User doesn`t exist");
+    }
+}
+
+ACTION HOQUPlatform::userdelete( name account ) {
+    require_auth(_code);
+
+    eosio_assert(is_account(account), "Unknown account");
+    auto itr = users_table.find(account.value);
+
+    if ( itr != users_table.end() ) {
+        users_table.emplace( _self, [&]( auto& u ) {
+            u.status = user_statuses["deleted"];
+        });
+    } else {
+        eosio_assert(false, "User doesn`t exist");
+    }
+}
+
+ACTION HOQUPlatform::userkycadd( name account, string report, uint8_t level, uint32_t timestamp) {
     require_auth(_code);
 
     auto itr = users_table.find(account.value);

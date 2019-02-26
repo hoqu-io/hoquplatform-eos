@@ -8,7 +8,6 @@ ACTION HOQUPlatform::offeradd(uint64_t id, uint64_t network_id, struct name merc
         eosio_assert(is_account(payer), "Unknown payer account");
     }
 
-
     auto offer_itr = offers_table.find(id);
     if ( offer_itr == offers_table.end() ) {
         auto network_itr = networks_table.find(network_id);
@@ -22,6 +21,7 @@ ACTION HOQUPlatform::offeradd(uint64_t id, uint64_t network_id, struct name merc
         if ( itr == users_table.end() ) {
             eosio_assert(false, "User doesn`t exist");
         } else {
+            eosio_assert(itr->status == user_statuses["active"], "Merchant user must be active");
             eosio_assert(itr->role == user_roles["merchant"], "Merchant user must be role merchant");
 
             offers_table.emplace( _self, [&]( auto& n ) {
@@ -49,7 +49,6 @@ ACTION HOQUPlatform::offerupd(uint64_t id, string name, struct name payer, strin
         auto offer_idx = ads_table.get_index<"byactoffer"_n>();
         auto itr = offer_idx.find(id);
         while (itr != offer_idx.end()) {
-            print_f( "% % %\n", itr->id, itr->offer_id, itr->status);
             ads_table.modify(ads_table.get(itr->id),_self, [&]( auto& ad ) {
                 ad.status = ad_statuses["inactive"];
             });

@@ -1,7 +1,7 @@
 #ifndef HOQUPLATFORM_LEAD_ACTION
 #define HOQUPLATFORM_LEAD_ACTION
 
-ACTION HOQUPlatform::leadadd(uint64_t id, uint64_t ad_id, uint8_t tariff_id, asset price) {
+ACTION HOQUPlatform::leadadd(uint64_t id, uint64_t ad_id, uint8_t tariff_id, asset price, string meta, string data) {
     require_auth(_code);
     eosio_assert(price.symbol.precision() == 9 && price.symbol.code().to_string() == "HQX", "Wrong symbol or precision");
 

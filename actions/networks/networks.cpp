@@ -14,6 +14,7 @@ ACTION HOQUPlatform::networkadd(uint64_t id, name owner, string name) {
         if ( itr == users_table.end() ) {
             eosio_assert(false, "User doesn`t exist");
         } else {
+            eosio_assert(itr->status == user_statuses["active"], "User must be active");
             eosio_assert(itr->role == user_roles["network"], "User must be role network");
 
             networks_table.emplace( _self, [&]( auto& n ) {

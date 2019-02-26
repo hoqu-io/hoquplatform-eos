@@ -6,6 +6,7 @@
 #include "actions/leads/leads.cpp"
 
 EOSIO_DISPATCH( HOQUPlatform,
+        (userlogin)
         (useradd)
         (userkycadd)
         (networkadd)
