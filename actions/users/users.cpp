@@ -1,7 +1,7 @@
 #ifndef HOQUPLATFORM_USERS_ACTION
 #define HOQUPLATFORM_USERS_ACTION
 
-ACTION HOQUPlatform::userlogin(name account, uint64_t token) {
+ACTION HOQUPlatform::userlogin(name account, uint64_t secret) {
     require_auth(account);
 }
 
