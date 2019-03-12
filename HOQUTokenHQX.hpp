@@ -13,7 +13,7 @@ namespace eosiosystem
 namespace eosio
 {
     using std::string;
-    class[[eosio::contract("HOQUToken")]] HOQUToken : public contract
+    class[[eosio::contract("HOQUTokenHQX")]] HOQUTokenHQX : public contract
     {
     public:
         using contract::contract;

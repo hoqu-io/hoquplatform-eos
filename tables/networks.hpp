@@ -18,7 +18,7 @@ map<string, uint8_t> network_statuses = {
 TABLE network {
     uint64_t id;
     name owner;
-    uint32_t created_at = current_time();
+    uint32_t created_at = now();
     string name;
     uint8_t status = 1;
 

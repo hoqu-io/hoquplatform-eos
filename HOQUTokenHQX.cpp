@@ -3,11 +3,11 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
-#include "HOQUToken.hpp"
+#include "HOQUTokenHQX.hpp"
 
 namespace eosio
 {
-    void HOQUToken::create(name issuer,
+    void HOQUTokenHQX::create(name issuer,
                             asset maximum_supply)
     {
         require_auth(_self);
@@ -29,7 +29,7 @@ namespace eosio
         });
     }
 
-    void HOQUToken::issue(name to, asset quantity, string memo)
+    void HOQUTokenHQX::issue(name to, asset quantity, string memo)
     {
         auto sym = quantity.symbol;
         eosio_assert(sym.is_valid(), "invalid symbol name");
@@ -60,7 +60,7 @@ namespace eosio
         }
     }
 
-    void HOQUToken::retire(asset quantity, string memo)
+    void HOQUTokenHQX::retire(asset quantity, string memo)
     {
         auto sym = quantity.symbol;
         eosio_assert(sym.is_valid(), "invalid symbol name");
@@ -84,7 +84,7 @@ namespace eosio
         sub_balance(st.issuer, quantity);
     }
 
-    void HOQUToken::transfer(name from,
+    void HOQUTokenHQX::transfer(name from,
                               name to,
                               asset quantity,
                               string memo)
@@ -110,7 +110,7 @@ namespace eosio
         add_balance(to, quantity, payer);
     }
 
-    void HOQUToken::transferfrom(name from,
+    void HOQUTokenHQX::transferfrom(name from,
                                   name to,
                                   name spender,
                                   asset quantity,
@@ -154,7 +154,7 @@ namespace eosio
         });
     }
 
-    void HOQUToken::approve(name owner,
+    void HOQUTokenHQX::approve(name owner,
                              name spender,
                              asset quantity)
     {
@@ -195,7 +195,7 @@ namespace eosio
         }
     }
 
-    void HOQUToken::sub_balance(name owner, asset value)
+    void HOQUTokenHQX::sub_balance(name owner, asset value)
     {
         accounts from_acnts(_self, owner.value);
 
@@ -207,7 +207,7 @@ namespace eosio
         });
     }
 
-    void HOQUToken::sub_balancefrom(name owner, name spender, asset value)
+    void HOQUTokenHQX::sub_balancefrom(name owner, name spender, asset value)
     {
         accounts from_acnts(_self, owner.value);
 
@@ -219,7 +219,7 @@ namespace eosio
         });
     }
 
-    void HOQUToken::add_balance(name owner, asset value, name ram_payer)
+    void HOQUTokenHQX::add_balance(name owner, asset value, name ram_payer)
     {
         accounts to_acnts(_self, owner.value);
         auto to = to_acnts.find(value.symbol.code().raw());
@@ -237,7 +237,7 @@ namespace eosio
         }
     }
 
-    void HOQUToken::open( name owner, const symbol& symbol, name ram_payer )
+    void HOQUTokenHQX::open( name owner, const symbol& symbol, name ram_payer )
     {
         require_auth( ram_payer );
 
@@ -256,7 +256,7 @@ namespace eosio
         }
     }
 
-    void HOQUToken::close( name owner, const symbol& symbol )
+    void HOQUTokenHQX::close( name owner, const symbol& symbol )
     {
         require_auth( owner );
         accounts acnts( _self, owner.value );
@@ -268,4 +268,4 @@ namespace eosio
 
 } // namespace eosio
 
-EOSIO_DISPATCH(eosio::HOQUToken, (create)(issue)(transfer)(approve)(transferfrom)(open)(close)(retire))
+EOSIO_DISPATCH(eosio::HOQUTokenHQX, (create)(issue)(transfer)(approve)(transferfrom)(open)(close)(retire))

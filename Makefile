@@ -1,4 +1,4 @@
-#nettestacc
+#networktesta
 #EOS8BkzkguX539Vd6spJ2bxZEYcKVs7i6ZfkpYKwMp5vUh9erSn4k
 #5KKrjPp7oTSpPWVh6gSDHasZEyukJnaEsK7UgiJF1SKf87D4nXP
 
@@ -12,11 +12,11 @@
 
 all: clean
 	eosio-cpp -o HOQUPlatform.wasm HOQUPlatform.cpp --abigen
-	eosio-cpp -o HOQUToken.wasm HOQUToken.cpp --abigen
-	cleos set contract hoquplatform /root/contracts/HOQUPlatform -p hoquplatform@active
-	cleos set contract hoqutoken /root/contracts/HOQUToken -p hoqutoken@active
-	cleos push action hoqutoken create '["hoqutoken", "275854380.000000000 HQX"]' -p hoqutoken@active
-	cleos set account permission hoquplatform active '{"threshold": 1, "keys":[{"key":"EOS6Vbm9emcdUheFJmPutmtPimLGBeeSgR26FzY6o6JAq1ke6CDoz", "weight":1}], "accounts":[{"permission":{"actor":"hoquplatform","permission":"eosio.code"},"weight":1}], "waits":[] }' owner -p hoquplatform
+	eosio-cpp -o HOQUTokenHQX.wasm HOQUTokenHQX.cpp --abigen
+	cleos -u https://jungle2.cryptolions.io:443 set contract hoquplatform /root/contracts/HOQUPlatform -p hoquplatform@active
+	cleos -u https://jungle2.cryptolions.io:443 set contract hoqutokenhqx /root/contracts/HOQUPlatform -p hoqutokenhqx@active
+	cleos -u https://jungle2.cryptolions.io:443 push action hoqutokenacc create '["hoqutokenacc", "275854380.000000000 HQX"]' -p hoqutokenacc@active
+	cleos set account permission hoquplatform active '{"threshold": 1, "keys":[{"key":"EOS6mTDb8vEMPQFcHbQf8WbvcfsksDD3WQmEbofdcf7A8DiRCxRH7", "weight":1}], "accounts":[{"permission":{"actor":"hoquplatform","permission":"eosio.code"},"weight":1}], "waits":[] }' owner -p hoquplatform
 
 clean:
 	rm -Rf *.abi *.wasm
@@ -25,7 +25,7 @@ clean:
 	sleep 3
 	-cleos wallet unlock --password PW5KQMbwwySCRtp182CUXd5gpAAvz8qcUo6n3SPth2FsardLA46gi
 	cleos create account eosio hoquplatform EOS8Bqx38Uqa3oorZsxuDK2V8Dtodos5x5fEuQgqh7CKDawdRzMgf
-	cleos create account eosio hoqutoken EOS6Vbm9emcdUheFJmPutmtPimLGBeeSgR26FzY6o6JAq1ke6CDoz
+	cleos -u https://jungle2.cryptolions.io:443 create account eosio hoqutoken EOS6Vbm9emcdUheFJmPutmtPimLGBeeSgR26FzY6o6JAq1ke6CDoz
 
 test: create_accounts test_users
 
@@ -34,8 +34,8 @@ create_accounts:
 	-cleos create account eosio nettestacc EOS8BkzkguX539Vd6spJ2bxZEYcKVs7i6ZfkpYKwMp5vUh9erSn4k
 	-cleos create account eosio merchtestacc EOS88jtvMKNZsoMS5fAXA85HuooTmcthXHnRqFqfNK6mBSkonqxLS
 	-cleos create account eosio afftestacc EOS8HPz1jXupskCpgf8GiRvxzhxWwdjxv6sdTbcft6E3oBPkew7RU
-	-cleos push action hoqutoken issue '["merchtestacc", "10000.000000000 HQX", "money for test"]' -p hoqutoken@active
-	cleos push action hoqutoken approve '["merchtestacc", "hoquplatform", "10000.000000000 HQX"]' -p merchtestacc@active
+	-cleos push action hoqutokenacc issue '["merchtestacc", "10000.000000000 HQX", "money for test"]' -p hoqutokenacc@active
+	cleos push action hoqutokenacc approve '["merchtestacc", "hoquplatform", "10000.000000000 HQX"]' -p merchtestacc@active
 
 test_users:
 	cleos push action hoquplatform useradd '["nettestacc", "network"]' -p hoquplatform@active
@@ -89,8 +89,8 @@ test_leads:
 	cleos get table --show-payer hoquplatform hoquplatform leads
 	cleos push action hoquplatform leadsell '[1]' -p hoquplatform@active
 	cleos get table --show-payer hoquplatform hoquplatform leads
-	cleos get currency balance hoqutoken merchtestacc HQX
-	cleos get currency balance hoqutoken afftestacc HQX
-	cleos get currency balance hoqutoken nettestacc HQX
-	cleos get currency balance hoqutoken hoquplatform HQX
+	cleos get currency balance hoqutokenacc merchtestacc HQX
+	cleos get currency balance hoqutokenacc afftestacc HQX
+	cleos get currency balance hoqutokenacc nettestacc HQX
+	cleos get currency balance hoqutokenacc hoquplatform HQX
 

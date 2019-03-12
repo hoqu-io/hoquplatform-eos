@@ -91,21 +91,21 @@ ACTION HOQUPlatform::leadsell(uint64_t id) {
 
     action(
             permission_level{_self, "active"_n},
-            "hoqutoken"_n,
+            "hoqutokenhqx"_n,
             "transferfrom"_n,
             std::make_tuple(offer.payer, ad.affiliate, _self, affiliate_price, "hoquplatform lead id: " + uint64_t2hex(id))
     ).send();
 
     action(
             permission_level{_self, "active"_n},
-            "hoqutoken"_n,
+            "hoqutokenhqx"_n,
             "transferfrom"_n,
             std::make_tuple(offer.payer, network.owner, _self, network_price, "hoquplatform lead id: " + uint64_t2hex(id))
     ).send();
 
     action(
             permission_level{_self, "active"_n},
-            "hoqutoken"_n,
+            "hoqutokenhqx"_n,
             "transferfrom"_n,
             std::make_tuple(offer.payer, "hoquplatform"_n, _self, hoquplatform_price, "hoquplatform lead id: " + uint64_t2hex(id))
     ).send();

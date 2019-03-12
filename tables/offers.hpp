@@ -34,7 +34,7 @@ struct offer_tariff {
 TABLE offer {
     uint64_t id;
     uint64_t network_id;
-    uint32_t created_at = current_time();
+    uint32_t created_at = now();
     name merchant;
     name payer;
     string name;

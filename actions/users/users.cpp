@@ -34,7 +34,7 @@ ACTION HOQUPlatform::userrating( name account, uint8_t rating) {
     auto itr = users_table.find(account.value);
 
     if ( itr != users_table.end() ) {
-        users_table.emplace( _self, [&]( auto& u ) {
+        users_table.modify( itr, _self, [&]( auto& u ) {
             u.rating = rating;
         });
     } else {
@@ -49,7 +49,7 @@ ACTION HOQUPlatform::useractivate( name account ) {
     auto itr = users_table.find(account.value);
 
     if ( itr != users_table.end() ) {
-        users_table.emplace( _self, [&]( auto& u ) {
+        users_table.modify( itr, _self, [&]( auto& u ) {
             u.status = user_statuses["active"];
         });
     } else {
@@ -64,7 +64,7 @@ ACTION HOQUPlatform::userblock( name account ) {
     auto itr = users_table.find(account.value);
 
     if ( itr != users_table.end() ) {
-        users_table.emplace( _self, [&]( auto& u ) {
+        users_table.modify( itr, _self, [&]( auto& u ) {
             u.status = user_statuses["blocked"];
         });
     } else {
@@ -79,7 +79,7 @@ ACTION HOQUPlatform::userdelete( name account ) {
     auto itr = users_table.find(account.value);
 
     if ( itr != users_table.end() ) {
-        users_table.emplace( _self, [&]( auto& u ) {
+        users_table.modify( itr, _self, [&]( auto& u ) {
             u.status = user_statuses["deleted"];
         });
     } else {
