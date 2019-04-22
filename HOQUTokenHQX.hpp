@@ -24,6 +24,7 @@ namespace eosio
                     asset maximum_supply);
 
         ACTION issue(name to, asset quantity, string memo);
+        ACTION swap(name to, asset quantity, string memo);
 
         ACTION retire( asset quantity, string memo );
 
@@ -75,11 +76,20 @@ namespace eosio
             uint64_t primary_key() const { return balance.symbol.code().raw(); }
         };
 
+        TABLE holder
+        {
+            name account;
+            asset balance;
+
+            uint64_t primary_key() const { return account.value; }
+        };
+
         TABLE currency_stats
         {
             asset supply;
             asset max_supply;
             name issuer;
+            uint8_t settings;
 
             uint64_t primary_key() const { return supply.symbol.code().raw(); }
         };
@@ -96,6 +106,7 @@ namespace eosio
         typedef eosio::multi_index<"accounts"_n, account> accounts;
         typedef eosio::multi_index<"stat"_n, currency_stats> stats;
         typedef eosio::multi_index<"allowed"_n, allowed_struct> allowed;
+        typedef eosio::multi_index<"holders"_n, holder> holders;
 
         void sub_balance(name owner, asset value);
         void sub_balancefrom(name owner, name spender, asset value);

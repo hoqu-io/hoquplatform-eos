@@ -6,7 +6,7 @@
 #EOS88jtvMKNZsoMS5fAXA85HuooTmcthXHnRqFqfNK6mBSkonqxLS
 #5J2ooSPULNDBvTcwxEoUYFjBR4MQcouvLMcXY6cGpuLCYwBqKz3
 
-#afftestacc
+#affiltestacc
 #EOS8HPz1jXupskCpgf8GiRvxzhxWwdjxv6sdTbcft6E3oBPkew7RU
 #5Jpb8aXdXCAqiH9PG3kaNoiYDQvVd15jk6PhVEEkttid1zyPucW
 

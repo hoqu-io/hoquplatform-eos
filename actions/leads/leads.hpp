@@ -3,7 +3,7 @@
 
 #include "../../tables/leads.hpp"
 
-ACTION leadadd(uint64_t id, uint64_t ad_id, uint8_t tariff_id,  asset price, string meta, string data);
+ACTION leadadd(uint64_t id, uint64_t ad_id, uint8_t tariff_id,  asset price, string meta, string data, uint32_t timestamp);
 ACTION leadchtariff(uint64_t id, uint8_t tariff_id, asset price, string memo);
 ACTION leaddecline(uint64_t id, string memo);
 ACTION leadsell(uint64_t id);

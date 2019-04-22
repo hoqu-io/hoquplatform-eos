@@ -11,7 +11,7 @@ map<string, uint8_t> ad_statuses = {
         {"active",3},
         {"paused",4},
         {"inactive",5},
-        {"banned",6},
+        {"declined",6},
         {"deleted",7}
 };
 

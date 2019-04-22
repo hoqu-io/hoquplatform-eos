@@ -60,6 +60,36 @@ namespace eosio
         }
     }
 
+    void HOQUTokenHQX::swap(name to, asset quantity, string memo)
+    {
+        auto sym = quantity.symbol;
+        eosio_assert(sym.is_valid(), "invalid symbol name");
+        eosio_assert(memo.size() <= 256, "memo has more than 256 bytes");
+
+        stats statstable(_self, sym.code().raw());
+        auto existing = statstable.find(sym.code().raw());
+        eosio_assert(existing != statstable.end(), "token with symbol does not exist, create token before issue");
+        const auto &st = *existing;
+
+        require_auth(st.issuer);
+
+        SEND_INLINE_ACTION(*this, issue, {{st.issuer, "active"_n}},
+                           {to, quantity, memo});
+
+        holders holderstable(_self, st.issuer.value);
+        auto it = holderstable.find( to.value );
+        if (it == holderstable.end()) {
+            holderstable.emplace(st.issuer, [&]( auto& a ){
+                a.balance = quantity;
+                a.account = to;
+            });
+        } else {
+            holderstable.modify(it, st.issuer, [&](auto &s) {
+                s.balance += quantity;
+            });
+        }
+    }
+
     void HOQUTokenHQX::retire(asset quantity, string memo)
     {
         auto sym = quantity.symbol;
@@ -92,9 +122,26 @@ namespace eosio
         eosio_assert(from != to, "cannot transfer to self");
         require_auth(from);
         eosio_assert(is_account(to), "to account does not exist");
+
         auto sym = quantity.symbol.code();
         stats statstable(_self, sym.raw());
         const auto &st = statstable.get(sym.raw());
+
+        holders holderstable(_self, st.issuer.value);
+        bool from_isholder = false;
+        bool to_isholder = false;
+
+        auto it_from = holderstable.find( from.value );
+        if (it_from != holderstable.end()) {
+            from_isholder = true;
+        }
+
+        auto it_to = holderstable.find( to.value );
+        if (it_to != holderstable.end()) {
+            to_isholder = true;
+        }
+
+        eosio_assert(from == st.issuer || ((to_isholder && from_isholder) || (!from_isholder && !to_isholder)), "transfer restricted");
 
         require_recipient(from);
         require_recipient(to);
@@ -152,6 +199,19 @@ namespace eosio
         allowedtable.modify(at, at.spender, [&](auto &a) {
             a.quantity -= quantity;
         });
+
+        holders holderstable(_self, st.issuer.value);
+        auto it_from = holderstable.find( from.value );
+        if (it_from != holderstable.end()) {
+            if (it_from->balance <= quantity) {
+                holderstable.erase(it_from);
+            } else {
+                holderstable.modify(it_from, st.issuer, [&](auto &s) {
+                    s.balance -= quantity;
+                });
+            }
+
+        }
     }
 
     void HOQUTokenHQX::approve(name owner,
@@ -166,6 +226,14 @@ namespace eosio
         auto sym = quantity.symbol.code();
         stats statstable(_self, sym.raw());
         const auto &st = statstable.get(sym.raw());
+
+        holders holderstable(_self, st.issuer.value);
+        bool from_isholder = false;
+        auto it_from = holderstable.find( owner.value );
+        if (it_from != holderstable.end()) {
+            from_isholder = true;
+            eosio_assert(spender == st.issuer, "holders can approve only to issuer");
+        }
 
         // Notify both the sender and receiver upon action completion
         require_recipient(owner);
@@ -268,4 +336,4 @@ namespace eosio
 
 } // namespace eosio
 
-EOSIO_DISPATCH(eosio::HOQUTokenHQX, (create)(issue)(transfer)(approve)(transferfrom)(open)(close)(retire))
+EOSIO_DISPATCH(eosio::HOQUTokenHQX, (create)(issue)(swap)(transfer)(approve)(transferfrom)(open)(close)(retire))
